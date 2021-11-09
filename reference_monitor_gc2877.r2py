@@ -28,25 +28,40 @@ class ABFile():
 
         # make the files and add 'SE' to the readat file...
         self.Afile = openfile(self.Afn, create)
+
+        if self.Bfn in listfiles():
+            removefile(self.Bfn)
+
         self.Bfile = openfile(self.Bfn, True)
         self.Bfile.writeat(self.Afile.readat(None, 0), 0)
 
         if create:
             self.Afile.writeat('SE', 0)
 
+        self.Afile_lock = createlock()
+        self.Bfile_lock = createlock()
+
     def writeat(self, data, offset):
         # Write the requested data to the B file using the sandbox's writeat call
+        self.Bfile_lock.acquire(True)
         self.Bfile.writeat(data, offset)
+        self.Bfile_lock.release()
 
     def readat(self, bytes, offset):
         # Read from the A file using the sandbox's readat...
+        self.Afile_lock.acquire(True)
+        self.Afile_lock.release()
         return self.Afile.readat(bytes, offset)
 
     def close(self):
+        self.Afile_lock.acquire(True)
+        self.Bfile_lock.acquire(True)
         self._check_and_update()
         self.Afile.close()
         self.Bfile.close()
         removefile(self.Bfn)
+        self.Afile_lock.release()
+        self.Bfile_lock.release()
 
     def _check_and_update(self):
         b_text = self.Bfile.readat(None, 0)
