@@ -28,7 +28,8 @@ class ABFile():
 
         # make the files and add 'SE' to the readat file...
         self.Afile = openfile(self.Afn, create)
-        self.Bfile = openfile(self.Bfn, create)
+        self.Bfile = openfile(self.Bfn, True)
+        self.Bfile.writeat(self.Afile.readat(None, 0), 0)
 
         if create:
             self.Afile.writeat('SE', 0)
@@ -45,6 +46,7 @@ class ABFile():
         self._check_and_update()
         self.Afile.close()
         self.Bfile.close()
+        removefile(self.Bfn)
 
     def _check_and_update(self):
         b_text = self.Bfile.readat(None, 0)
