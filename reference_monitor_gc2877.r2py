@@ -22,6 +22,14 @@ class ABFile():
     def __init__(self, filename, create):
         # globals
         mycontext['debug'] = False
+
+        if filename[0] == '.' or filename == "" or len(filename) > 120:
+            raise ValueError("Invalid filename")
+        for c in filename:
+            d = ord(c)
+            if not ((d == 46) or (48 <= d <= 57) or (97 <= d <= 122) or (d == 45) or (d == 95)):
+                raise ValueError("Invalid filename")
+
         # local (per object) reference to the underlying file
         self.Afn = filename + '.a'
         self.Bfn = filename + '.b'
@@ -50,8 +58,9 @@ class ABFile():
     def readat(self, bytes, offset):
         # Read from the A file using the sandbox's readat...
         self.Afile_lock.acquire(True)
+        r = self.Afile.readat(bytes, offset)
         self.Afile_lock.release()
-        return self.Afile.readat(bytes, offset)
+        return r
 
     def close(self):
         self.Afile_lock.acquire(True)
