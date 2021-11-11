@@ -35,6 +35,10 @@ class ABFile():
         self.Bfn = filename + '.b'
 
         # make the files and add 'SE' to the readat file...
+
+        if create == False and not (self.Afn in listfiles()):
+            raise ValueError("File not present")
+
         self.Afile = openfile(self.Afn, create)
 
         if self.Bfn in listfiles():
