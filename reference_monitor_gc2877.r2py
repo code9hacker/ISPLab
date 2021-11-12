@@ -32,10 +32,10 @@ class ABFile():
         self.Afile = openfile(self.Afn, True)
         self.Bfile = openfile(self.Bfn, True)
 
-        self.Bfile.writeat(self.Afile.readat(None, 0), 0)
-
         if create:
             self.Afile.writeat('SE', 0)
+
+        self.Bfile.writeat(self.Afile.readat(None, 0), 0)
 
         self.Afile_lock = createlock()
         self.Bfile_lock = createlock()
