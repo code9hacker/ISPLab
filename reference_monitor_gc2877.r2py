@@ -28,11 +28,14 @@ class ABFile():
         self.Bfn = filename + '.b'
 
         # make the files and add 'SE' to the readat file...
-
+        create_new = False
+        if not(self.Afn in listfiles()):
+            create_new = True
+            
         self.Afile = openfile(self.Afn, True)
         self.Bfile = openfile(self.Bfn, True)
 
-        if create:
+        if create and create_new:
             self.Afile.writeat('SE', 0)
 
         self.Bfile.writeat(self.Afile.readat(None, 0), 0)
