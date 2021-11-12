@@ -50,6 +50,13 @@ class ABFile():
         if create:
             self.Afile.writeat('SE', 0)
 
+        a_content = self.Afile.readat(None, 0)
+        if not (a_content[0] == 'S' and a_content[-1] == 'E'):
+            self.Afile.close()
+            removefile(self.Afn)
+            self.Afile = openfile(self.Afn, True)
+            self.Afile.writeat('SE', 0)
+
         self.Afile_lock = createlock()
         self.Bfile_lock = createlock()
 
