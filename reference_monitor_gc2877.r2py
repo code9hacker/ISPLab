@@ -23,38 +23,18 @@ class ABFile():
         # globals
         mycontext['debug'] = False
 
-        if filename[0] == '.' or filename == "" or len(filename) > 120:
-            raise ValueError("Invalid filename")
-        for c in filename:
-            d = ord(c)
-            if not ((d == 46) or (48 <= d <= 57) or (97 <= d <= 122) or (d == 45) or (d == 95)):
-                raise ValueError("Invalid filename")
-
         # local (per object) reference to the underlying file
         self.Afn = filename + '.a'
         self.Bfn = filename + '.b'
 
         # make the files and add 'SE' to the readat file...
 
-        if create == False and not (self.Afn in listfiles()):
-            raise ValueError("File not present")
-
-        self.Afile = openfile(self.Afn, create)
-
-        if self.Bfn in listfiles():
-            removefile(self.Bfn)
-
+        self.Afile = openfile(self.Afn, True)
         self.Bfile = openfile(self.Bfn, True)
+
         self.Bfile.writeat(self.Afile.readat(None, 0), 0)
 
         if create:
-            self.Afile.writeat('SE', 0)
-
-        a_content = self.Afile.readat(None, 0)
-        if not (a_content[0] == 'S' and a_content[-1] == 'E'):
-            self.Afile.close()
-            removefile(self.Afn)
-            self.Afile = openfile(self.Afn, True)
             self.Afile.writeat('SE', 0)
 
         self.Afile_lock = createlock()
@@ -85,18 +65,12 @@ class ABFile():
 
     def _check_and_update(self):
         b_text = self.Bfile.readat(None, 0)
-        a_text = self.Afile.readat(None, 0)
 
         if b_text[0] == 'S' and b_text[-1] == 'E':
             self.Afile.close()
             removefile(self.Afn)
             self.Afile = openfile(self.Afn, True)
             self.Afile.writeat(b_text, 0)
-        else:
-            self.Afile.close()
-            removefile(self.Afn)
-            self.Afile = openfile(self.Afn, True)
-            self.Afile.writeat(a_text, 0)
 
 
 def ABopenfile(filename, create):
