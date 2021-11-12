@@ -54,23 +54,21 @@ class ABFile():
         return r
 
     def close(self):
-        self.Afile_lock.acquire(True)
-        self.Bfile_lock.acquire(True)
         self._check_and_update()
         self.Afile.close()
         self.Bfile.close()
         removefile(self.Bfn)
-        self.Afile_lock.release()
-        self.Bfile_lock.release()
 
     def _check_and_update(self):
+        self.Bfile_lock.acquire(True)
         b_text = self.Bfile.readat(None, 0)
 
         if b_text[0] == 'S' and b_text[-1] == 'E':
-            self.Afile.close()
-            removefile(self.Afn)
-            self.Afile = openfile(self.Afn, True)
+            self.Afile_lock.acquire(True)
             self.Afile.writeat(b_text, 0)
+            self.Afile_lock.release()
+
+        self.Bfile_lock.release()
 
 
 def ABopenfile(filename, create):
