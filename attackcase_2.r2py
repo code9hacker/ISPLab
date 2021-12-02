@@ -1,5 +1,5 @@
 # Case 2 - New file - write valid - read should give SE
-
+"""
 if "testfile.txt.a" in listfiles():
     removefile("testfile.txt.a")
 if "testfile.txt.b" in listfiles():
@@ -12,3 +12,4 @@ myfile.writeat("Stest12345E12", 0)
 assert ('SE' == myfile.readat(None, 0))
 
 myfile.close()
+"""
