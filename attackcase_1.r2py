@@ -1,0 +1,11 @@
+# Case 1 - New file - read should give SE
+
+if "testfile.txt.a" in listfiles():
+    removefile("testfile.txt.a")
+if "testfile.txt.b" in listfiles():
+    removefile("testfile.txt.b")
+myfile = ABopenfile("testfile.txt", True)  # Create an AB file
+
+assert ('SE' == myfile.readat(None, 0))
+
+myfile.close()
