@@ -1,4 +1,7 @@
 # Case 3 - New file - write invalid - read should give SE
+
+# Not in Grader
+
 """
 if "testfile.txt.a" in listfiles():
     removefile("testfile.txt.a")

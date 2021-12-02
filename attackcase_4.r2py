@@ -1,18 +1,17 @@
-# Case 2 - New file - write valid - read should give SE
+# Case 4 - New file - write valid - close file - read should give valid on next open
 
-# Not in Grader
-
-"""
 if "testfile.txt.a" in listfiles():
     removefile("testfile.txt.a")
 if "testfile.txt.b" in listfiles():
     removefile("testfile.txt.b")
 myfile = ABopenfile("testfile.txt", True)  # Create an AB file
 
-# put some valid data in the file.
 myfile.writeat("Stest12345E", 0)
 
-assert ('SE' == myfile.readat(None, 0))
+myfile.close()
+
+myfile = ABopenfile("testfile.txt", False)
+
+assert ('Stest12345E' == myfile.readat(None, 0))
 
 myfile.close()
-"""
